@@ -12,16 +12,15 @@
 
 using namespace std;
 
-class StringHex {
+namespace bitconverter {
 
-public:
     /**
     *string 转 hex 两个16位字符 中间已空格隔开
     *比如 02 02 00 01 00 01
     *最多1024个字符
     *  @return: int 数据字节数
     */
-    static int stringToHex(const string& str, vector<unsigned char>& out) {
+    int stringToHex(const string& str, vector<unsigned char>& out) {
         unsigned char hexdata, lowhexdata;
         int len = str.length();
 
@@ -61,7 +60,7 @@ public:
      * @param len
      * @return string
      */
-    static string charToHexString(const vector<unsigned char>& bytes, int len) {
+    string charToHexString(const vector<unsigned char>& bytes, int len) {
         const char HEX[] = "0123456789ABCDEF";
         std::string lStr;
         for (int i = 0; i < len; i++) {
@@ -81,7 +80,7 @@ public:
      * @param len
      * @return
      */
-    static string charToHexStringWithoutSpace(const vector<unsigned char>& bytes, int len) {
+    string charToHexStringWithoutSpace(const vector<unsigned char>& bytes, int len) {
         const char HEX[] = "0123456789ABCDEF";
         string lStr;
         for (int i = 0; i < len; i++) {
@@ -127,7 +126,7 @@ public:
         return true;
     }
 
-    static string charToString(const vector<unsigned char>& in, int start, int len) {
+    string charToString(const vector<unsigned char>& in, int start, int len) {
         string result;
         for (int i = 0; i < len; i++) {
             result.push_back(in[start + i]);
@@ -135,8 +134,7 @@ public:
         return result;
     }
 
-private:
-    static char convertCharToHex(char ch) {
+   char convertCharToHex(char ch) {
         if ((ch >= '0') && (ch <= '9'))
             return ch - 0x30;
         else if ((ch >= 'A') && (ch <= 'F'))

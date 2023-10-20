@@ -12,10 +12,9 @@
 #include <vector>
 
 using namespace std;
-
-class BitConverter {
-public:
-    static bool i16_to_bytes(short value, bool is_big_endian, vector<unsigned char>& out) {
+namespace bitconverter {
+    
+    bool i16_to_bytes(short value, bool is_big_endian, vector<unsigned char>& out) {
         if (is_big_endian) {
             out.push_back(value >> 8);
             out.push_back(value & 0xFF);
@@ -26,11 +25,11 @@ public:
         return true;
     }
 
-    static bool u16_to_bytes(unsigned short value, bool is_big_endian, vector<unsigned char>& out) {
+    bool u16_to_bytes(unsigned short value, bool is_big_endian, vector<unsigned char>& out) {
         return i16_to_bytes(value, is_big_endian, out);
     }
 
-    static void i32_to_bytes(int32_t value, bool is_big_endian, vector<unsigned char>& out) {
+    void i32_to_bytes(int32_t value, bool is_big_endian, vector<unsigned char>& out) {
         if (is_big_endian) {
             for (int i = 0; i < static_cast<int>(sizeof(int32_t)); i++) {
                 out.push_back(static_cast<uint8_t>((value >> (24 - i * 8)) & 0xFF));
@@ -42,11 +41,11 @@ public:
         }
     }
 
-    static void u32_to_bytes(uint32_t value, bool is_big_endian, vector<unsigned char>& out) {
+    void u32_to_bytes(uint32_t value, bool is_big_endian, vector<unsigned char>& out) {
         return i32_to_bytes(value, is_big_endian, out);
     }
 
-    static void i64_to_bytes(int64_t value, bool is_big_endian, vector<unsigned char>& out) {
+    void i64_to_bytes(int64_t value, bool is_big_endian, vector<unsigned char>& out) {
         if (is_big_endian) {
             for (int i = 0; i < static_cast<int>(sizeof(int64_t)); i++) {
                 out.push_back(static_cast<uint8_t>((value >> (56 - i * 8)) & 0xFF));
@@ -58,11 +57,11 @@ public:
         }
     }
 
-    static void u64_to_bytes(uint64_t value, bool is_big_endian, vector<unsigned char>& out) {
+    void u64_to_bytes(uint64_t value, bool is_big_endian, vector<unsigned char>& out) {
         return i64_to_bytes(value, is_big_endian, out);
     }
 
-    static void create_bytes_from_bits(const vector<bool>& bits, vector<unsigned char>& out) {
+    void create_bytes_from_bits(const vector<bool>& bits, vector<unsigned char>& out) {
         for (int i = 0; i < static_cast<int>(bits.size() / 8); i++) {
             uint8_t b = 0;
             for (int j = 0; j < 8; j++) {
@@ -72,7 +71,7 @@ public:
         }
     }
 
-    static void f32_to_bytes(float_t value, bool is_big_endian, vector<unsigned char>& out) {
+    void f32_to_bytes(float_t value, bool is_big_endian, vector<unsigned char>& out) {
         vector<bool> bits;
         bits.reserve(sizeof(float_t) * 8);
         bits.push_back(value < 0);
@@ -105,7 +104,7 @@ public:
     }
 
 
-    static void f64_to_bytes(double_t value, bool is_big_endian, vector<unsigned char>& out) {
+    void f64_to_bytes(double_t value, bool is_big_endian, vector<unsigned char>& out) {
         vector<bool> bits;
         bits.reserve(sizeof(double_t) * 8);
         bits.push_back(value < 0);
@@ -137,7 +136,7 @@ public:
         }
     }
 
-    static short bytes_to_i16(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
+    short bytes_to_i16(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
         short result;
         if (is_big_endian) {
             result = input_it[startIndex];
@@ -151,13 +150,13 @@ public:
     }
 
 
-    static unsigned short bytes_to_u16(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
+    unsigned short bytes_to_u16(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
         return static_cast<unsigned short>(bytes_to_i16(input_it, startIndex, is_big_endian));
     }
 
 
 
-    static int bytes_to_i32(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
+    int bytes_to_i32(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
         int32_t result = 0;
         if (is_big_endian) {
             for (int i = 0; i < 4; i++) {
@@ -172,11 +171,11 @@ public:
         }
     }
 
-    static unsigned int bytes_to_u32(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
+    unsigned int bytes_to_u32(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
         return static_cast<unsigned int>(bytes_to_i32(input_it, startIndex, is_big_endian));
     }
 
-    static long bytes_to_i64(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
+    long bytes_to_i64(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
         int64_t result = 0;
         if (is_big_endian) {
             for (int i = 0; i < 8; i++) {
@@ -191,11 +190,11 @@ public:
         }
     }
 
-    static unsigned long bytes_to_u64(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
+    unsigned long bytes_to_u64(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
         return static_cast<unsigned long>(bytes_to_i64(input_it, startIndex, is_big_endian));
     }
 
-    static float bytes_to_f32(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
+    float bytes_to_f32(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
         vector<bool> bits;
         bits.reserve(sizeof(float_t) * 8);
         for (int i = 0; i < static_cast<int>(sizeof(float_t)); i++) {
@@ -223,7 +222,7 @@ public:
         return sign * std::ldexp(mantissa, exponent);
     }
 
-    static double bytes_to_f64(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
+    double bytes_to_f64(const vector<unsigned char>& input_it, int startIndex, bool is_big_endian) {
         vector<bool> bits;
         bits.reserve(sizeof(double_t) * 8);
         for (int i = 0; i < static_cast<int>(sizeof(double_t)); i++) {
@@ -250,5 +249,4 @@ public:
         }
         return sign * std::ldexp(mantissa, exponent);
     }
-
-};
+}
